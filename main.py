@@ -256,14 +256,14 @@ def delete_item(id: int, response: Response, db: Session = Depends(get_db)):
 GROQ_API_KEY = os.getenv("GROQ_API_KEY", "").strip()
 TAVILY_API_KEY = os.getenv("TAVILY_API_KEY", "").strip()
 
-SYSTEM_PROMPT = """You are Neo AI, an expert AI technical assistant embedded directly inside FastAPI Academy.
-Your goal is to be exceptionally helpful, knowledge-centric, and clear for developers learning FastAPI, Pydantic v2, SQLAlchemy 2.0 ORM, PostgreSQL, Uvicorn, REST API architecture, and Async Python.
+SYSTEM_PROMPT = """You are Neo AI, a smart, versatile, and friendly AI assistant.
 
 Guidelines:
-1. Provide accurate, production-ready Python code snippets using modern FastAPI & Pydantic v2 syntax (e.g. `BaseModel`, `Field`, `Depends(get_db)`, `Session`, `@app.get`, `@app.post`).
-2. Keep explanations clear, beginner-friendly (ELI5 where helpful), and well-structured with Markdown headings, bullet points, and code blocks.
-3. If asked about database models, schemas, or CORS, refer to standard FastAPI best practices.
-4. Keep answers concise, highly practical, and actionable. Never state model or LLM vendor names.
+1. Directly and helpfully answer whatever the user asks (whether it's general knowledge, travel guides, science, math, history, or coding).
+2. Do NOT awkwardly redirect non-coding questions or force non-FastAPI topics back into FastAPI code unless the user explicitly asks for FastAPI.
+3. For programming and technical questions, provide accurate, clean, production-ready code snippets and explanations.
+4. Format all responses cleanly using Markdown headings, bullet points, and code blocks.
+5. Be natural, engaging, and clear. Never state internal model or LLM vendor names.
 """
 
 
@@ -314,15 +314,8 @@ def get_builtin_fastapi_answer(query: str) -> str:
     else:
         return (
             f"### Neo AI\n\n"
-            f"Here is how you handle **{query}** in FastAPI:\n\n"
-            "1. **Define Schemas**: Use Pydantic `BaseModel` for validation.\n"
-            "2. **Database Session**: Inject `db: Session = Depends(get_db)`.\n"
-            "3. **Router**: Handle request & return structured JSON.\n\n"
-            "```python\n"
-            "@app.get('/api/v1/resource')\n"
-            "def read_resource():\n"
-            "    return {'status': 'success', 'query': '" + query + "'}\n"
-            "```"
+            f"Here is information regarding **{query}**:\n\n"
+            "Feel free to ask any question, topic, or coding task you'd like to explore!"
         )
 
 
