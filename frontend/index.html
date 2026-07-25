@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FastAPI Academy - Clean Knowledge Platform</title>
+  <meta name="description"
+    content="A clean, minimalist learning platform for FastAPI, Pydantic, and SQLAlchemy with real-world analogies and code syntax highlighting." />
+  <!-- Google Fonts & Lucide Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="./src/style.css" />
+</head>
+
+<body class="theme-dark">
+  <div id="app">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-inner">
+        <div class="brand">
+          <span class="brand-icon"><i data-lucide="zap"></i></span>
+          <span class="brand-name">FastAPI Academy</span>
+          <span class="version-tag">v3.0</span>
+        </div>
+
+        <div class="header-center">
+          <nav class="nav-tabs">
+            <button class="tab-item active" data-tab="theory">
+              <i data-lucide="book-open"></i> Theory
+            </button>
+            <button class="tab-item" data-tab="lab">
+              <i data-lucide="cpu"></i> Practical Lab
+            </button>
+            <button class="tab-item" data-tab="schema">
+              <i data-lucide="database"></i> Schema
+            </button>
+            <button class="tab-item" data-tab="api">
+              <i data-lucide="send"></i> API Tester
+            </button>
+            <button class="tab-item" data-tab="code">
+              <i data-lucide="code-2"></i> Code Blueprint
+            </button>
+          </nav>
+        </div>
+
+        <div class="header-actions">
+          <button class="btn btn-secondary btn-sm" id="openLearnBtn" title="FastAPI Interactive Cheat Sheet">
+            <i data-lucide="graduation-cap"></i> Cheat Sheet
+          </button>
+
+          <button class="btn-icon theme-toggle-btn" id="themeToggleBtn" title="Switch Theme (Dark / Light)">
+            <i data-lucide="moon" id="themeIcon"></i>
+          </button>
+
+          <div class="conn-status" id="statusPill" title="Configure FastAPI backend endpoint">
+            <span class="status-indicator" id="statusDot"></span>
+            <span class="status-label" id="statusText">Demo Mode</span>
+          </div>
+
+          <button class="btn-icon" id="openSettingsBtn" title="Backend Settings">
+            <i data-lucide="settings"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <main class="workspace">
+
+      <!-- TAB 1: Theory & Core Modules -->
+      <section class="tab-pane active" id="tab-theory">
+        <!-- Hero Spotlight Section -->
+        <div class="hero-section">
+          <h1 class="hero-title">Master FastAPI.<br /><span class="text-gradient">From Zero Knowledge to Production
+              Code.</span></h1>
+          <p class="hero-subtitle">
+            An intuitive learning platform with real-life analogies, vibrant code syntax highlighting, and hands-on
+            execution labs designed for all experience levels.
+          </p>
+
+          <div class="hero-actions">
+            <button class="btn btn-hero-primary" id="startLabHeroBtn">
+              <i data-lucide="play"></i> Launch Practical Lab
+            </button>
+            <a href="#analogyCard" class="btn btn-hero-secondary">
+              How APIs Work (ELI5) <i data-lucide="arrow-down"></i>
+            </a>
+          </div>
+
+          <!-- Hero Metrics Bar -->
+          <div class="hero-metrics">
+            <div class="metric-card">
+              <span class="metric-num">&lt; 10ms</span>
+              <span class="metric-label">Execution Latency</span>
+            </div>
+            <div class="metric-divider"></div>
+            <div class="metric-card">
+              <span class="metric-num">100%</span>
+              <span class="metric-label">Type-Safe Pydantic</span>
+            </div>
+            <div class="metric-divider"></div>
+            <div class="metric-card">
+              <span class="metric-num">6 Modules</span>
+              <span class="metric-label">Core Architecture</span>
+            </div>
+            <div class="metric-divider"></div>
+            <div class="metric-card">
+              <span class="metric-num">Live SQL</span>
+              <span class="metric-label">ORM Query Logging</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Beginner Orientation: Restaurant Metaphor (ELI5) -->
+        <div class="metaphor-card" id="analogyCard">
+          <div class="metaphor-header">
+            <div class="metaphor-badge">🐣 Beginner's Corner (Explain Like I'm 5)</div>
+            <h3>How Web APIs & FastAPI Work (The Restaurant Analogy)</h3>
+            <p>If you've never built a web server before, think of FastAPI as a restaurant service pipeline:</p>
+          </div>
+
+          <div class="metaphor-grid">
+            <div class="metaphor-step">
+              <div class="metaphor-icon"><i data-lucide="user"></i></div>
+              <span class="metaphor-role">1. Customer</span>
+              <span class="metaphor-tech">Frontend / Browser</span>
+              <p>Sends an order (HTTP Request) asking for data or creating a new item.</p>
+            </div>
+
+            <div class="metaphor-step">
+              <div class="metaphor-icon"><i data-lucide="file-text"></i></div>
+              <span class="metaphor-role">2. Menu & Rules</span>
+              <span class="metaphor-tech">Pydantic Schemas</span>
+              <p>Defines valid items and ensures the order parameters are correctly formatted.</p>
+            </div>
+
+            <div class="metaphor-step">
+              <div class="metaphor-icon"><i data-lucide="concierge-bell"></i></div>
+              <span class="metaphor-role">3. Waiter</span>
+              <span class="metaphor-tech">FastAPI Router</span>
+              <p>Receives the order at an endpoint (e.g. <code>/api/items</code>) and passes it to the kitchen.</p>
+            </div>
+
+            <div class="metaphor-step">
+              <div class="metaphor-icon"><i data-lucide="chef-hat"></i></div>
+              <span class="metaphor-role">4. Kitchen & Chef</span>
+              <span class="metaphor-tech">Python Function</span>
+              <p>Executes business logic, checks credentials, and prepares the requested payload.</p>
+            </div>
+
+            <div class="metaphor-step">
+              <div class="metaphor-icon"><i data-lucide="archive"></i></div>
+              <span class="metaphor-role">5. Pantry</span>
+              <span class="metaphor-tech">SQLAlchemy & Database</span>
+              <p>Where raw ingredients (database rows & tables) are fetched or stored safely.</p>
+            </div>
+
+            <div class="metaphor-step">
+              <div class="metaphor-icon"><i data-lucide="package-check"></i></div>
+              <span class="metaphor-role">6. Served Dish</span>
+              <span class="metaphor-tech">JSON Response</span>
+              <p>The final structured data sent back to the customer with an HTTP 200 OK status code.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Theory Modules Grid -->
+        <div class="section-title-box" id="theoryGrid">
+          <h2><i data-lucide="book-open"></i> Core Curriculum & Architectural Concepts</h2>
+          <p>Click any module card to expand technical deep-dives and view colorful Python code patterns.</p>
+        </div>
+
+        <div class="modules-grid">
+          <!-- Module 1 -->
+          <div class="module-card" data-module="asgi">
+            <div class="module-header">
+              <span class="module-num">01</span>
+              <span class="module-tag">Architecture</span>
+            </div>
+            <h3 class="module-title">ASGI & Asynchronous Event Loop</h3>
+            <p class="module-desc">Understand how FastAPI handles thousands of concurrent requests using Python's
+              non-blocking <code>async/await</code> event loop.</p>
+            <div class="module-footer">
+              <span class="module-link">Read Deep Dive & Code <i data-lucide="chevron-right"></i></span>
+            </div>
+          </div>
+
+          <!-- Module 2 -->
+          <div class="module-card" data-module="pydantic">
+            <div class="module-header">
+              <span class="module-num">02</span>
+              <span class="module-tag">Validation</span>
+            </div>
+            <h3 class="module-title">Pydantic v2 Type Safety & Schemas</h3>
+            <p class="module-desc">Learn how request data is automatically checked at runtime, catching input mistakes
+              with automatic 422 error messages.</p>
+            <div class="module-footer">
+              <span class="module-link">Read Deep Dive & Code <i data-lucide="chevron-right"></i></span>
+            </div>
+          </div>
+
+          <!-- Module 3 -->
+          <div class="module-card" data-module="routing">
+            <div class="module-header">
+              <span class="module-num">03</span>
+              <span class="module-tag">REST API</span>
+            </div>
+            <h3 class="module-title">FastAPI Routing & Path Operations</h3>
+            <p class="module-desc">Master path parameters, query parameters, request bodies, and HTTP status codes (200,
+              201, 404) in clean Python methods.</p>
+            <div class="module-footer">
+              <span class="module-link">Read Deep Dive & Code <i data-lucide="chevron-right"></i></span>
+            </div>
+          </div>
+
+          <!-- Module 4 -->
+          <div class="module-card" data-module="sqlalchemy">
+            <div class="module-header">
+              <span class="module-num">04</span>
+              <span class="module-tag">Database</span>
+            </div>
+            <h3 class="module-title">SQLAlchemy 2.0 & Relational ORM</h3>
+            <p class="module-desc">Explore declarative database models, primary keys, and automatic SQL statement
+              generation without writing raw strings.</p>
+            <div class="module-footer">
+              <span class="module-link">Read Deep Dive & Code <i data-lucide="chevron-right"></i></span>
+            </div>
+          </div>
+
+          <!-- Module 5 -->
+          <div class="module-card" data-module="di">
+            <div class="module-header">
+              <span class="module-num">05</span>
+              <span class="module-tag">Design Pattern</span>
+            </div>
+            <h3 class="module-title">Dependency Injection Container</h3>
+            <p class="module-desc">Discover FastAPI's <code>Depends()</code> hook for managing database connection
+              lifecycles and reusable logic seamlessly.</p>
+            <div class="module-footer">
+              <span class="module-link">Read Deep Dive & Code <i data-lucide="chevron-right"></i></span>
+            </div>
+          </div>
+
+          <!-- Module 6 -->
+          <div class="module-card" data-module="openapi">
+            <div class="module-header">
+              <span class="module-num">06</span>
+              <span class="module-tag">Documentation</span>
+            </div>
+            <h3 class="module-title">OpenAPI Spec & Auto Interactive Docs</h3>
+            <p class="module-desc">See how FastAPI automatically creates interactive Swagger documentation (at
+              <code>/docs</code>) directly from your code.</p>
+            <div class="module-footer">
+              <span class="module-link">Read Deep Dive & Code <i data-lucide="chevron-right"></i></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Module Detail Drawer / Modal Overlay -->
+        <div class="detail-card hidden" id="moduleDetailCard">
+          <div class="detail-header">
+            <div>
+              <span class="badge" id="moduleDetailTag">Module 01</span>
+              <h3 id="moduleDetailTitle">Module Title</h3>
+            </div>
+            <button class="btn-icon" id="closeDetailBtn"><i data-lucide="x"></i></button>
+          </div>
+          <div class="detail-body">
+            <div id="moduleDetailTheory" class="detail-text">Theoretical explanation text...</div>
+            <div class="detail-code-box">
+              <div class="code-box-header">
+                <span><i data-lucide="code"></i> Reference Implementation (Syntax Highlighted)</span>
+                <button class="btn-chip" id="copyModuleCodeBtn">Copy Snippet</button>
+              </div>
+              <pre class="code-view"><code id="moduleDetailCode"># Code snippet preview</code></pre>
+            </div>
+          </div>
+          <div class="detail-footer">
+            <button class="btn btn-primary" id="tryInLabBtn"><i data-lucide="play"></i> Try in Practical Lab</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 2: Practical Lab & CRUD Execution -->
+      <section class="tab-pane" id="tab-lab">
+        <div class="content-header">
+          <div>
+            <h2 class="page-title">Practical Execution Lab</h2>
+            <p class="page-subtitle">Interact with database resources and monitor live HTTP, Pydantic, and SQL execution
+              pipelines.</p>
+          </div>
+          <button class="btn btn-primary" id="newItemBtn">
+            <i data-lucide="plus"></i> Add New Item
+          </button>
+        </div>
+
+        <!-- Interactive FastAPI Request Architecture Flow -->
+        <div class="architecture-card">
+          <div class="arch-header">
+            <div class="arch-title">
+              <i data-lucide="workflow"></i>
+              <span>Live FastAPI Request Pipeline</span>
+            </div>
+            <span class="arch-hint">Click any pipeline step to inspect the corresponding execution stage</span>
+          </div>
+
+          <div class="arch-steps">
+            <div class="arch-step active" data-flow-step="request" id="flowStepRequest">
+              <div class="step-num">1</div>
+              <div class="step-content">
+                <span class="step-name">HTTP Client</span>
+                <span class="step-sub">Fetch Request</span>
+              </div>
+              <i data-lucide="arrow-right" class="step-arrow"></i>
+            </div>
+
+            <div class="arch-step" data-flow-step="pydantic" id="flowStepPydantic">
+              <div class="step-num">2</div>
+              <div class="step-content">
+                <span class="step-name">Pydantic Validation</span>
+                <span class="step-sub">Type Check</span>
+              </div>
+              <i data-lucide="arrow-right" class="step-arrow"></i>
+            </div>
+
+            <div class="arch-step" data-flow-step="router" id="flowStepRouter">
+              <div class="step-num">3</div>
+              <div class="step-content">
+                <span class="step-name">FastAPI Router</span>
+                <span class="step-sub">@app Endpoint</span>
+              </div>
+              <i data-lucide="arrow-right" class="step-arrow"></i>
+            </div>
+
+            <div class="arch-step" data-flow-step="sql" id="flowStepSQL">
+              <div class="step-num">4</div>
+              <div class="step-content">
+                <span class="step-name">SQLAlchemy ORM</span>
+                <span class="step-sub">Session & SQL</span>
+              </div>
+              <i data-lucide="arrow-right" class="step-arrow"></i>
+            </div>
+
+            <div class="arch-step" data-flow-step="response" id="flowStepResponse">
+              <div class="step-num">5</div>
+              <div class="step-content">
+                <span class="step-name">JSON Response</span>
+                <span class="step-sub">Serialize Payload</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dynamic Step Explainer -->
+          <div class="arch-explainer" id="archExplainerBox">
+            <div class="explainer-icon"><i data-lucide="info"></i></div>
+            <div class="explainer-body" id="archExplainerText">
+              <strong>Step 1 - HTTP Client:</strong> Sends an asynchronous HTTP request (GET, POST, PUT, DELETE)
+              carrying headers and payload to the server.
+            </div>
+          </div>
+        </div>
+
+        <!-- Metric Bar -->
+        <div class="summary-bar">
+          <div class="summary-item">
+            <div class="summary-icon"><i data-lucide="list"></i></div>
+            <div>
+              <span class="summary-label">Total Items</span>
+              <div class="summary-value" id="statTotal">0</div>
+            </div>
+          </div>
+
+          <div class="summary-item">
+            <div class="summary-icon"><i data-lucide="check-circle"></i></div>
+            <div>
+              <span class="summary-label">Completed</span>
+              <div class="summary-value" id="statCompleted">0</div>
+            </div>
+          </div>
+
+          <div class="summary-item">
+            <div class="summary-icon"><i data-lucide="clock"></i></div>
+            <div>
+              <span class="summary-label">Pending</span>
+              <div class="summary-value" id="statPending">0</div>
+            </div>
+          </div>
+
+          <div class="summary-item">
+            <div class="summary-icon"><i data-lucide="database"></i></div>
+            <div>
+              <span class="summary-label">Database Target</span>
+              <div class="summary-value engine-value" id="statEngine">PostgreSQL</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filter & Search Bar -->
+        <div class="filter-bar">
+          <div class="search-input">
+            <i data-lucide="search"></i>
+            <input type="text" id="searchInput" placeholder="Search title or description..." />
+          </div>
+
+          <div class="filter-controls">
+            <select id="categoryFilter" class="select">
+              <option value="ALL">All Categories</option>
+              <option value="Work">Work</option>
+              <option value="Personal">Personal</option>
+              <option value="Learning">Learning</option>
+              <option value="Project">Project</option>
+            </select>
+
+            <select id="statusFilter" class="select">
+              <option value="ALL">All Status</option>
+              <option value="pending">Pending</option>
+              <option value="completed">Completed</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Data Table View -->
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th width="40"></th>
+                <th width="70">ID</th>
+                <th>Title & Description</th>
+                <th width="120">Category</th>
+                <th width="110">Priority</th>
+                <th width="110">Status</th>
+                <th width="100" class="text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="itemsTableBody">
+              <!-- Dynamically populated table rows -->
+            </tbody>
+          </table>
+
+          <div class="empty-state hidden" id="emptyState">
+            <i data-lucide="inbox"></i>
+            <p>No items found in database.</p>
+            <button class="btn btn-secondary btn-sm" id="emptyStateAddBtn">Create First Item</button>
+          </div>
+        </div>
+
+        <!-- Console & SQL Inspector Dock -->
+        <div class="inspector-dock">
+          <div class="dock-header">
+            <div class="dock-title">
+              <i data-lucide="terminal"></i>
+              <span>Live Terminal & Execution Inspector</span>
+            </div>
+            <div class="dock-tabs">
+              <button class="dock-tab active" data-dock="sql">SQL Query</button>
+              <button class="dock-tab" data-dock="request">HTTP Request</button>
+              <button class="dock-tab" data-dock="schema">Pydantic Model</button>
+              <button class="dock-tab" data-dock="json">JSON Response</button>
+            </div>
+            <div class="dock-meta" id="dockMeta">
+              <span class="meta-item">Status: <strong id="pipelineStatus">200 OK</strong></span>
+              <span class="meta-item">Latency: <strong id="pipelineTime">0ms</strong></span>
+            </div>
+          </div>
+
+          <div class="dock-body">
+            <div class="dock-pane active" id="dock-sql">
+              <div class="code-line"><span class="tok-comment">-- Executed SQLAlchemy Statement:</span></div>
+              <pre><code id="stepSQLCode"><span class="tok-keyword">SELECT</span> items.id, items.title, items.description, items.completed <span class="tok-keyword">FROM</span> items <span class="tok-keyword">ORDER BY</span> items.id <span class="tok-keyword">ASC</span>;</code></pre>
+            </div>
+
+            <div class="dock-pane" id="dock-request">
+              <div class="code-line" id="stepClientDetail">Method: <strong class="tok-decorator">GET</strong> | URL:
+                <code>/api/v1/items</code></div>
+            </div>
+
+            <div class="dock-pane" id="dock-schema">
+              <div class="code-line" id="stepFastAPIDetail">Pydantic Validation: <strong
+                  class="tok-type">list[ItemResponse]</strong> (<span class="tok-keyword">Passed</span>)</div>
+            </div>
+
+            <div class="dock-pane" id="dock-json">
+              <pre><code id="pipelineJSONPreview">// Response payload JSON output will display here</code></pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 3: Database Schema Explorer -->
+      <section class="tab-pane" id="tab-schema">
+        <div class="learn-banner">
+          <div class="learn-banner-icon"><i data-lucide="database"></i></div>
+          <div>
+            <h4>🎓 ORM & Relational Schema Introspection</h4>
+            <p>SQLAlchemy maps Python classes directly to database tables. Below is the live introspection of your SQL
+              engine schema definitions.</p>
+          </div>
+        </div>
+
+        <div class="content-header">
+          <div>
+            <h2 class="page-title">Database Schema Explorer</h2>
+            <p class="page-subtitle">Relational table structures introspected from backend database metadata.</p>
+          </div>
+          <button class="btn btn-secondary btn-sm" id="refreshSchemaBtn">
+            <i data-lucide="rotate-cw"></i> Refresh Schema
+          </button>
+        </div>
+
+        <div class="schema-grid" id="schemaTablesGrid">
+          <!-- Dynamically populated schema cards -->
+        </div>
+      </section>
+
+      <!-- TAB 4: API Tester -->
+      <section class="tab-pane" id="tab-api">
+        <div class="learn-banner">
+          <div class="learn-banner-icon"><i data-lucide="send"></i></div>
+          <div>
+            <h4>🎓 REST Endpoint Playground & OpenAPI Spec</h4>
+            <p>Test FastAPI REST endpoints directly in browser and observe how input JSON is validated and transformed
+              into SQL operations.</p>
+          </div>
+        </div>
+
+        <div class="content-header">
+          <div>
+            <h2 class="page-title">API Endpoint Tester</h2>
+            <p class="page-subtitle">Execute HTTP requests against FastAPI endpoints and inspect SQL logs.</p>
+          </div>
+        </div>
+
+        <div class="api-grid">
+          <div class="card">
+            <div class="card-title"><i data-lucide="sliders"></i> HTTP Request Builder</div>
+            <div class="form-row">
+              <select id="reqMethod" class="select select-method">
+                <option value="GET">GET</option>
+                <option value="POST">POST</option>
+                <option value="PUT">PUT</option>
+                <option value="DELETE">DELETE</option>
+              </select>
+              <input type="text" id="reqUrl" class="input input-mono" value="/api/v1/items" />
+            </div>
+
+            <div class="presets-row">
+              <span class="presets-label">Presets:</span>
+              <button class="btn-chip" data-preset="GET_ALL">GET /items</button>
+              <button class="btn-chip" data-preset="GET_ONE">GET /items/1</button>
+              <button class="btn-chip" data-preset="POST">POST /items</button>
+              <button class="btn-chip" data-preset="PUT">PUT /items/1</button>
+              <button class="btn-chip" data-preset="DELETE">DELETE /items/1</button>
+              <button class="btn-chip" data-preset="HEALTH">GET /health</button>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">JSON Request Body</label>
+              <textarea id="reqBody" class="textarea textarea-mono" rows="6"
+                placeholder='{\n  "title": "Learn FastAPI",\n  "category": "Learning"\n}'></textarea>
+            </div>
+
+            <button class="btn btn-primary" id="sendReqBtn">
+              <i data-lucide="send"></i> Execute Request
+            </button>
+          </div>
+
+          <div class="card">
+            <div class="card-title flex-between">
+              <span><i data-lucide="activity"></i> Response & SQL Output</span>
+              <span class="badge" id="responseStatusBadge">Ready</span>
+            </div>
+
+            <div class="meta-row">
+              <span>Time: <strong id="responseTime">-</strong></span>
+              <span>Status: <strong id="statusCode">-</strong></span>
+              <span>Engine: <strong id="responseDBEngine">-</strong></span>
+            </div>
+
+            <div class="sql-box-inline">
+              <span class="sql-label"><i data-lucide="database"></i> Executed SQL:</span>
+              <code
+                id="playgroundSQLText"><span class="tok-keyword">SELECT</span> * <span class="tok-keyword">FROM</span> items <span class="tok-keyword">ORDER BY</span> items.id <span class="tok-keyword">ASC</span>;</code>
+            </div>
+
+            <pre class="code-view"><code id="responseBody">// Click "Execute Request" to test endpoint</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 5: Code Blueprint -->
+      <section class="tab-pane" id="tab-code">
+        <div class="learn-banner">
+          <div class="learn-banner-icon"><i data-lucide="code"></i></div>
+          <div>
+            <h4>🎓 Production FastAPI Python Reference Blueprint</h4>
+            <p>A complete <code>main.py</code> implementation showing FastAPI initialization, CORSMiddleware, Pydantic
+              models, SQLAlchemy session dependency, and REST route handlers.</p>
+          </div>
+        </div>
+
+        <div class="content-header">
+          <div>
+            <h2 class="page-title">FastAPI Backend Code Blueprint</h2>
+            <p class="page-subtitle">Production Python <code>main.py</code> template connecting FastAPI, Pydantic, and
+              SQLAlchemy.</p>
+          </div>
+          <button class="btn btn-secondary" id="copyCodeBtn">
+            <i data-lucide="copy"></i> Copy main.py Code
+          </button>
+        </div>
+
+        <div class="card code-card">
+          <pre
+            class="code-view code-full"><code id="pythonCodeSnippet"><span class="tok-comment"># main.py - Clean FastAPI Backend with SQLAlchemy & Pydantic</span>
+<span class="tok-keyword">from</span> fastapi <span class="tok-keyword">import</span> FastAPI, Depends, HTTPException, status
+<span class="tok-keyword">from</span> fastapi.middleware.cors <span class="tok-keyword">import</span> CORSMiddleware
+<span class="tok-keyword">from</span> sqlalchemy.orm <span class="tok-keyword">import</span> Session
+<span class="tok-keyword">from</span> database <span class="tok-keyword">import</span> Base, engine, SessionLocal, DB_ENGINE_TYPE
+<span class="tok-keyword">from</span> database_model <span class="tok-keyword">import</span> ItemDB
+<span class="tok-keyword">from</span> models <span class="tok-keyword">import</span> ItemCreate, ItemResponse
+
+<span class="tok-comment"># Create database tables automatically</span>
+Base.metadata.<span class="tok-func">create_all</span>(bind=engine)
+
+app = <span class="tok-func">FastAPI</span>(title=<span class="tok-string">"FastAPI Hub Backend"</span>, version=<span class="tok-string">"2.0.0"</span>)
+
+app.<span class="tok-func">add_middleware</span>(
+    CORSMiddleware,
+    allow_origins=[<span class="tok-string">"*"</span>],
+    allow_credentials=<span class="tok-keyword">True</span>,
+    allow_methods=[<span class="tok-string">"*"</span>],
+    allow_headers=[<span class="tok-string">"*"</span>],
+)
+
+<span class="tok-keyword">def</span> <span class="tok-func">get_db</span>():
+    db = <span class="tok-func">SessionLocal</span>()
+    <span class="tok-keyword">try</span>:
+        <span class="tok-keyword">yield</span> db
+    <span class="tok-keyword">finally</span>:
+        db.<span class="tok-func">close</span>()
+
+<span class="tok-decorator">@app.get</span>(<span class="tok-string">"/health"</span>)
+<span class="tok-keyword">def</span> <span class="tok-func">health_check</span>():
+    <span class="tok-keyword">return</span> {<span class="tok-string">"status"</span>: <span class="tok-string">"ok"</span>, <span class="tok-string">"engine"</span>: DB_ENGINE_TYPE}
+
+<span class="tok-decorator">@app.get</span>(<span class="tok-string">"/api/v1/items"</span>, response_model=<span class="tok-type">list[ItemResponse]</span>)
+<span class="tok-keyword">def</span> <span class="tok-func">get_all_items</span>(db: <span class="tok-type">Session</span> = <span class="tok-func">Depends</span>(get_db)):
+    <span class="tok-keyword">return</span> db.<span class="tok-func">query</span>(ItemDB).<span class="tok-func">order_by</span>(ItemDB.id.<span class="tok-func">asc</span>()).<span class="tok-func">all</span>()
+
+<span class="tok-decorator">@app.post</span>(<span class="tok-string">"/api/v1/items"</span>, response_model=<span class="tok-type">ItemResponse</span>, status_code=status.HTTP_201_CREATED)
+<span class="tok-keyword">def</span> <span class="tok-func">create_item</span>(item: <span class="tok-type">ItemCreate</span>, db: <span class="tok-type">Session</span> = <span class="tok-func">Depends</span>(get_db)):
+    db_item = <span class="tok-func">ItemDB</span>(**item.<span class="tok-func">model_dump</span>())
+    db.<span class="tok-func">add</span>(db_item)
+    db.<span class="tok-func">commit</span>()
+    db.<span class="tok-func">refresh</span>(db_item)
+    <span class="tok-keyword">return</span> db_item
+
+<span class="tok-decorator">@app.put</span>(<span class="tok-string">"/api/v1/items/{id}"</span>, response_model=<span class="tok-type">ItemResponse</span>)
+<span class="tok-keyword">def</span> <span class="tok-func">update_item</span>(id: <span class="tok-type">int</span>, item: <span class="tok-type">ItemCreate</span>, db: <span class="tok-type">Session</span> = <span class="tok-func">Depends</span>(get_db)):
+    db_item = db.<span class="tok-func">query</span>(ItemDB).<span class="tok-func">filter</span>(ItemDB.id == id).<span class="tok-func">first</span>()
+    <span class="tok-keyword">if</span> <span class="tok-keyword">not</span> db_item:
+        <span class="tok-keyword">raise</span> <span class="tok-func">HTTPException</span>(status_code=<span class="tok-number">404</span>, detail=<span class="tok-string">"Item not found"</span>)
+    <span class="tok-keyword">for</span> key, val <span class="tok-keyword">in</span> item.<span class="tok-func">model_dump</span>().<span class="tok-func">items</span>():
+        <span class="tok-func">setattr</span>(db_item, key, val)
+    db.<span class="tok-func">commit</span>()
+    db.<span class="tok-func">refresh</span>(db_item)
+    <span class="tok-keyword">return</span> db_item
+
+<span class="tok-decorator">@app.delete</span>(<span class="tok-string">"/api/v1/items/{id}"</span>)
+<span class="tok-keyword">def</span> <span class="tok-func">delete_item</span>(id: <span class="tok-type">int</span>, db: <span class="tok-type">Session</span> = <span class="tok-func">Depends</span>(get_db)):
+    db_item = db.<span class="tok-func">query</span>(ItemDB).<span class="tok-func">filter</span>(ItemDB.id == id).<span class="tok-func">first</span>()
+    <span class="tok-keyword">if</span> <span class="tok-keyword">not</span> db_item:
+        <span class="tok-keyword">raise</span> <span class="tok-func">HTTPException</span>(status_code=<span class="tok-number">404</span>, detail=<span class="tok-string">"Item not found"</span>)
+    db.<span class="tok-func">delete</span>(db_item)
+    db.<span class="tok-func">commit</span>()
+    <span class="tok-keyword">return</span> {<span class="tok-string">"detail"</span>: f<span class="tok-string">"Item #{id} deleted"</span>}</code></pre>
+        </div>
+      </section>
+    </main>
+
+    <!-- Modals -->
+    <!-- Create/Edit Item Modal -->
+    <div class="modal-overlay hidden" id="itemModal">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h3 id="modalTitle">Add New Item</h3>
+          <button class="modal-close" id="closeModalBtn">&times;</button>
+        </div>
+        <form id="itemForm" class="modal-body">
+          <input type="hidden" id="itemId" />
+          <div class="form-group">
+            <label class="form-label">Title *</label>
+            <input type="text" id="itemTitle" required class="input"
+              placeholder="e.g. Learn FastAPI Dependency Injection" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Description</label>
+            <textarea id="itemDescription" rows="3" class="textarea" placeholder="Brief details..."></textarea>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Category</label>
+              <select id="itemCategory" class="select">
+                <option value="Learning">Learning</option>
+                <option value="Project">Project</option>
+                <option value="Work">Work</option>
+                <option value="Personal">Personal</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Priority</label>
+              <select id="itemPriority" class="select">
+                <option value="High">High</option>
+                <option value="Medium" selected>Medium</option>
+                <option value="Low">Low</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group checkbox-group">
+            <label class="checkbox-label">
+              <input type="checkbox" id="itemCompleted" />
+              <span>Mark as completed</span>
+            </label>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" id="cancelModalBtn">Cancel</button>
+            <button type="submit" class="btn btn-primary" id="saveItemBtn">Save Item</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div class="modal-overlay hidden" id="settingsModal">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h3>Backend Configuration</h3>
+          <button class="modal-close" id="closeSettingsBtn">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Backend Connection Mode</label>
+            <div class="mode-select">
+              <label class="radio-box">
+                <input type="radio" name="appMode" value="mock" id="modeMock" checked />
+                <div>
+                  <strong>Demo Mode (Mock Storage)</strong>
+                  <p>In-browser localStorage execution with simulated SQL pipeline.</p>
+                </div>
+              </label>
+              <label class="radio-box">
+                <input type="radio" name="appMode" value="api" id="modeApi" />
+                <div>
+                  <strong>Live FastAPI Backend</strong>
+                  <p>Connects directly to your running FastAPI & Database server.</p>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">FastAPI Base URL</label>
+            <input type="text" id="apiBaseUrl" class="input input-mono" value="http://localhost:8000" />
+          </div>
+
+          <div class="status-box" id="modalConnectionStatus">
+            <i data-lucide="activity"></i> Click "Test Connection" to ping backend health.
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" id="testConnBtn">Test Connection</button>
+          <button class="btn btn-primary" id="saveSettingsBtn">Save Settings</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- FastAPI Quick Cheat Sheet Modal -->
+    <div class="modal-overlay hidden" id="learnModal">
+      <div class="modal-card modal-large">
+        <div class="modal-header">
+          <div class="flex-align gap-2">
+            <i data-lucide="graduation-cap"></i>
+            <h3>FastAPI Developer Quick Reference</h3>
+          </div>
+          <button class="modal-close" id="closeLearnBtn">&times;</button>
+        </div>
+
+        <div class="modal-body">
+          <div class="learn-tabs">
+            <button class="learn-tab active" data-learn="basics">1. Core Setup</button>
+            <button class="learn-tab" data-learn="pydantic">2. Pydantic Models</button>
+            <button class="learn-tab" data-learn="sqlalchemy">3. SQLAlchemy ORM</button>
+            <button class="learn-tab" data-learn="di">4. Dependency Injection</button>
+          </div>
+
+          <div class="learn-content-pane active" id="learn-basics">
+            <h4>FastAPI High-Performance Setup</h4>
+            <p>FastAPI uses modern Python type hints to deliver high execution speed and auto-generated interactive
+              OpenAPI documentation at <code>/docs</code>.</p>
+            <pre
+              class="code-view"><code><span class="tok-keyword">from</span> fastapi <span class="tok-keyword">import</span> FastAPI
+
+app = <span class="tok-func">FastAPI</span>(title=<span class="tok-string">"My API"</span>)
+
+<span class="tok-decorator">@app.get</span>(<span class="tok-string">"/"</span>)
+<span class="tok-keyword">def</span> <span class="tok-func">read_root</span>():
+    <span class="tok-keyword">return</span> {<span class="tok-string">"status"</span>: <span class="tok-string">"online"</span>}</code></pre>
+          </div>
+
+          <div class="learn-content-pane" id="learn-pydantic">
+            <h4>Pydantic Request & Response Validation</h4>
+            <p>Define request and response schemas to validate JSON payloads automatically at runtime.</p>
+            <pre class="code-view"><code><span class="tok-keyword">from</span> pydantic <span class="tok-keyword">import</span> BaseModel
+
+<span class="tok-keyword">class</span> <span class="tok-type">ItemCreate</span>(BaseModel):
+    title: <span class="tok-type">str</span>
+    category: <span class="tok-type">str</span> = <span class="tok-string">"General"</span>
+
+<span class="tok-keyword">class</span> <span class="tok-type">ItemResponse</span>(ItemCreate):
+    id: <span class="tok-type">int</span>
+    completed: <span class="tok-type">bool</span></code></pre>
+          </div>
+
+          <div class="learn-content-pane" id="learn-sqlalchemy">
+            <h4>SQLAlchemy Relational Models</h4>
+            <p>Map Python classes to relational database tables using <code>DeclarativeBase</code>.</p>
+            <pre class="code-view"><code><span class="tok-keyword">from</span> sqlalchemy.orm <span class="tok-keyword">import</span> DeclarativeBase, Mapped, mapped_column
+
+<span class="tok-keyword">class</span> <span class="tok-type">Base</span>(DeclarativeBase):
+    <span class="tok-keyword">pass</span>
+
+<span class="tok-keyword">class</span> <span class="tok-type">ItemDB</span>(Base):
+    __tablename__ = <span class="tok-string">"items"</span>
+    id: <span class="tok-type">Mapped[int]</span> = <span class="tok-func">mapped_column</span>(primary_key=<span class="tok-keyword">True</span>)
+    title: <span class="tok-type">Mapped[str]</span></code></pre>
+          </div>
+
+          <div class="learn-content-pane" id="learn-di">
+            <h4>Database Session Dependency Injection</h4>
+            <p>Use <code>Depends(get_db)</code> to manage session creation and clean teardown per request.</p>
+            <pre class="code-view"><code><span class="tok-keyword">def</span> <span class="tok-func">get_db</span>():
+    db = <span class="tok-func">SessionLocal</span>()
+    <span class="tok-keyword">try</span>:
+        <span class="tok-keyword">yield</span> db
+    <span class="tok-keyword">finally</span>:
+        db.<span class="tok-func">close</span>()</code></pre>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-primary" id="gotItLearnBtn">Got it, thanks!</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container" id="toastContainer"></div>
+  </div>
+
+  <script type="module" src="./src/main.js"></script>
+</body>
+
+</html>
