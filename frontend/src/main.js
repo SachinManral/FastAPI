@@ -477,11 +477,11 @@ class App {
   updateStatusBadge() {
     if (this.config.mode === "api") {
       this.statusDot.className = "status-indicator online";
-      this.statusText.textContent = `Live API (${this.config.baseUrl})`;
+      this.statusText.textContent = "Live API";
       if (this.modeApiRadio) this.modeApiRadio.checked = true;
     } else {
       this.statusDot.className = "status-indicator offline";
-      this.statusText.textContent = "Demo Mode (Mock)";
+      this.statusText.textContent = "Demo Mode";
       if (this.modeMockRadio) this.modeMockRadio.checked = true;
       this.activeDBEngine = "Mock Storage";
     }
