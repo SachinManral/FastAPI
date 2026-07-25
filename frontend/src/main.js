@@ -281,6 +281,14 @@ class App {
     // Blueprint Copy Code
     this.copyCodeBtn = document.getElementById("copyCodeBtn");
     this.pythonCodeSnippet = document.getElementById("pythonCodeSnippet");
+
+    // AI Chatbot Assistant
+    this.aiChatMessages = document.getElementById("aiChatMessages");
+    this.aiChatForm = document.getElementById("aiChatForm");
+    this.aiChatInput = document.getElementById("aiChatInput");
+    this.aiChatSendBtn = document.getElementById("aiChatSendBtn");
+    this.aiFloatingBtn = document.getElementById("aiFloatingBtn");
+    this.chatHistory = [];
   }
 
   // --- Theme Switcher (Dark & Light) ---
@@ -480,7 +488,131 @@ class App {
       });
     }
 
+    // AI Chatbot Event Handlers
+    if (this.aiChatForm) {
+      this.aiChatForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        this.handleAIChatSubmit();
+      });
+    }
+
+    document.querySelectorAll(".ai-chip").forEach(chip => {
+      chip.addEventListener("click", () => {
+        const prompt = chip.getAttribute("data-prompt");
+        if (this.aiChatInput) {
+          this.aiChatInput.value = prompt;
+          this.handleAIChatSubmit();
+        }
+      });
+    });
+
+    if (this.aiFloatingBtn) {
+      this.aiFloatingBtn.addEventListener("click", () => {
+        this.switchTab("ai");
+        const aiTabBtn = document.querySelector(`.tab-item[data-tab="ai"]`);
+        if (aiTabBtn) aiTabBtn.scrollIntoView({ behavior: "smooth" });
+      });
+    }
+
     if (window.lucide) window.lucide.createIcons();
+  }
+
+  // --- AI Chatbot Assistant Methods ---
+  async handleAIChatSubmit() {
+    if (!this.aiChatInput || !this.aiChatMessages) return;
+    const userMsg = this.aiChatInput.value.trim();
+    if (!userMsg) return;
+
+    this.appendChatMessage("user", userMsg);
+    this.aiChatInput.value = "";
+    if (this.aiChatSendBtn) this.aiChatSendBtn.disabled = true;
+
+    const loadingId = this.appendChatLoading();
+
+    try {
+      const res = await fetch(`${this.config.baseUrl}/api/v1/chat`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          message: userMsg,
+          history: this.chatHistory.slice(-6)
+        })
+      });
+
+      this.removeChatLoading(loadingId);
+
+      if (res.ok) {
+        const data = await res.json();
+        this.appendChatMessage("ai", data.reply, data.source);
+        this.chatHistory.push({ role: "user", content: userMsg });
+        this.chatHistory.push({ role: "assistant", content: data.reply });
+      } else {
+        const errData = await res.json().catch(() => ({}));
+        this.appendChatMessage("ai", `⚠️ **API Note (${res.status})**: ${errData.detail || "Unable to reach Groq Cloud AI inference endpoint."}`);
+      }
+    } catch (err) {
+      this.removeChatLoading(loadingId);
+      this.appendChatMessage("ai", `**FastAPI Assistant Note:**\n\nI can help you build your FastAPI application! Here is a tip on **${userMsg}**:\n\nIn FastAPI, always ensure your endpoints use ` + "`Depends(get_db)`" + ` for automatic database session cleanup, and ` + "`BaseModel`" + ` schemas for validation!`, "Local Knowledge Helper");
+    } finally {
+      if (this.aiChatSendBtn) this.aiChatSendBtn.disabled = false;
+      if (window.lucide) window.lucide.createIcons();
+    }
+  }
+
+  appendChatMessage(role, text, source = null) {
+    if (!this.aiChatMessages) return;
+    const msgDiv = document.createElement("div");
+    msgDiv.className = `chat-msg ${role === 'user' ? 'user-msg' : 'ai-msg'}`;
+    
+    const formattedText = this.formatMarkdownText(text);
+    const sourceTag = source ? `<div style="font-size:0.72rem; color:var(--text-muted); margin-top:0.4rem;">Powered by ${source}</div>` : '';
+
+    msgDiv.innerHTML = `
+      <div class="chat-avatar"><i data-lucide="${role === 'user' ? 'user' : 'bot'}"></i></div>
+      <div class="chat-bubble">
+        ${formattedText}
+        ${sourceTag}
+      </div>
+    `;
+
+    this.aiChatMessages.appendChild(msgDiv);
+    this.aiChatMessages.scrollTop = this.aiChatMessages.scrollHeight;
+    if (window.lucide) window.lucide.createIcons();
+  }
+
+  appendChatLoading() {
+    if (!this.aiChatMessages) return null;
+    const id = `loading-${Date.now()}`;
+    const msgDiv = document.createElement("div");
+    msgDiv.className = "chat-msg ai-msg";
+    msgDiv.id = id;
+    msgDiv.innerHTML = `
+      <div class="chat-avatar"><i data-lucide="bot"></i></div>
+      <div class="chat-bubble">
+        <span class="tok-comment">// Querying Groq Llama-3.3-70B & Tavily Knowledge Engine...</span>
+      </div>
+    `;
+    this.aiChatMessages.appendChild(msgDiv);
+    this.aiChatMessages.scrollTop = this.aiChatMessages.scrollHeight;
+    if (window.lucide) window.lucide.createIcons();
+    return id;
+  }
+
+  removeChatLoading(id) {
+    const el = document.getElementById(id);
+    if (el) el.remove();
+  }
+
+  formatMarkdownText(txt) {
+    if (!txt) return "";
+    let html = txt
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+      .replace(/```([\s\S]*?)```/g, (match, p1) => `<pre><code>${p1.trim()}</code></pre>`)
+      .replace(/`([^`]+)`/g, "<code>$1</code>")
+      .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+      .replace(/\n\n/g, "<br><br>")
+      .replace(/\n/g, "<br>");
+    return html;
   }
 
   switchTab(targetTab) {

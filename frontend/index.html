@@ -44,6 +44,9 @@
             <button class="tab-item" data-tab="code">
               <i data-lucide="code-2"></i> Code Blueprint
             </button>
+            <button class="tab-item" data-tab="ai">
+              <i data-lucide="bot"></i> AI Mentor
+            </button>
           </nav>
         </div>
 
@@ -683,6 +686,58 @@ app.<span class="tok-func">add_middleware</span>(
     <span class="tok-keyword">return</span> {<span class="tok-string">"detail"</span>: f<span class="tok-string">"Item #{id} deleted"</span>}</code></pre>
         </div>
       </section>
+
+      <!-- TAB 6: AI FastAPI Mentor & Knowledge Assistant -->
+      <section class="tab-pane" id="tab-ai">
+        <div class="learn-banner">
+          <div class="learn-banner-icon"><i data-lucide="bot"></i></div>
+          <div>
+            <h4>🤖 AI FastAPI Mentor & Knowledge Assistant</h4>
+            <p>Powered by <strong>Groq Cloud (Llama-3.3-70B)</strong> & <strong>Tavily Web Search</strong>. Ask any technical question about FastAPI endpoints, Pydantic v2 validation, SQLAlchemy ORM, PostgreSQL, or Uvicorn deployment!</p>
+          </div>
+        </div>
+
+        <div class="content-header">
+          <div>
+            <h2 class="page-title">AI Knowledge Assistant</h2>
+            <p class="page-subtitle">Real-time intelligent coding partner trained on FastAPI architecture & web development.</p>
+          </div>
+          <div class="ai-engine-badge">
+            <span class="status-indicator online"></span>
+            <span>Engine: <strong>Groq Llama-3.3-70B</strong></span>
+          </div>
+        </div>
+
+        <!-- Quick AI Prompt Chips -->
+        <div class="ai-prompt-chips">
+          <span class="chip-label">Quick Prompts:</span>
+          <button class="ai-chip" data-prompt="How do Pydantic request models work in FastAPI?">Pydantic Models</button>
+          <button class="ai-chip" data-prompt="Explain Depends(get_db) session lifecycle in SQLAlchemy">Depends(get_db) Lifecycle</button>
+          <button class="ai-chip" data-prompt="How to set up CORSMiddleware for frontend communication?">CORS Setup</button>
+          <button class="ai-chip" data-prompt="Write a production POST endpoint with Pydantic validation and error handling">POST Endpoint Example</button>
+        </div>
+
+        <!-- AI Chat Interface Card -->
+        <div class="ai-chat-card">
+          <div class="ai-chat-messages" id="aiChatMessages">
+            <div class="chat-msg ai-msg">
+              <div class="chat-avatar"><i data-lucide="bot"></i></div>
+              <div class="chat-bubble">
+                Hello! 👋 I am your <strong>FastAPI Mentor</strong> powered by Groq Cloud Llama-3.3-70B.
+                <br><br>
+                Ask me any questions about FastAPI endpoints, Pydantic schemas, SQLAlchemy ORM queries, database migrations, or CORS issues. How can I help you today?
+              </div>
+            </div>
+          </div>
+
+          <form class="ai-chat-input-bar" id="aiChatForm">
+            <input type="text" id="aiChatInput" class="input" placeholder="Ask FastAPI AI Mentor anything..." required />
+            <button type="submit" class="btn btn-primary" id="aiChatSendBtn">
+              <i data-lucide="send"></i> Send
+            </button>
+          </form>
+        </div>
+      </section>
     </main>
 
     <!-- Modals -->
@@ -867,6 +922,12 @@ app = <span class="tok-func">FastAPI</span>(title=<span class="tok-string">"My A
 
     <!-- Toast Notifications -->
     <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Floating AI Assistant Trigger Bubble -->
+    <button class="ai-floating-trigger" id="aiFloatingBtn" title="Ask AI FastAPI Mentor">
+      <i data-lucide="bot"></i>
+      <span class="floating-label">Ask AI</span>
+    </button>
   </div>
 
   <script type="module" src="./src/main.js"></script>

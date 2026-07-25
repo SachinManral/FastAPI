@@ -40,13 +40,27 @@ class DatabaseSchemaResponse(BaseModel):
     tables: list[TableSchema]
 
 
+class ChatMessage(BaseModel):
+    role: str
+    content: str
+
+
+class ChatRequest(BaseModel):
+    message: str
+    history: list[ChatMessage] = []
+
+
+class ChatResponse(BaseModel):
+    reply: str
+    source: str = "Groq Llama-3.3-70B"
+
+
 class TelemetryResponse(BaseModel):
-    status: str
     engine: str
-    total_items: int
+    database_name: str
+    latency_ms: float
+
     completed_items: int
     pending_items: int
     categories: list[str]
     mode: str
-
-
