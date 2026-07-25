@@ -868,18 +868,25 @@ class App {
   // --- DB Schema Inspection (Tab 3) ---
   async fetchDBSchema() {
     if (!this.schemaTablesGrid) return;
+    
+    const icon = this.refreshSchemaBtn ? this.refreshSchemaBtn.querySelector("i") : null;
+    if (icon) icon.classList.add("spin-anim");
 
-    if (this.config.mode === "api") {
-      try {
+    try {
+      if (this.config.mode === "api") {
         const res = await fetch(`${this.config.baseUrl}/api/v1/db/schema`);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const schema = await res.json();
         this.renderDBSchema(schema);
-      } catch (err) {
+      } else {
         this.renderMockDBSchema();
       }
-    } else {
+    } catch (err) {
       this.renderMockDBSchema();
+    } finally {
+      setTimeout(() => {
+        if (icon) icon.classList.remove("spin-anim");
+      }, 700);
     }
   }
 
@@ -1082,8 +1089,8 @@ class App {
     const rawBody = this.reqBody.value.trim();
     const fullUrl = `${this.config.baseUrl}${endpoint.startsWith('/') ? '' : '/'}${endpoint}`;
 
-    this.responseStatusBadge.textContent = "Executing...";
-    this.responseBody.textContent = "Executing HTTP Request...";
+    this.responseStatusBadge.innerHTML = `<span class="status-code-2xx">Executing...</span>`;
+    this.responseBody.innerHTML = `<span class="tok-comment">// Executing HTTP request...</span>`;
 
     const startTime = performance.now();
 
@@ -1091,9 +1098,9 @@ class App {
       setTimeout(() => {
         const elapsed = Math.round(performance.now() - startTime);
         this.responseTime.textContent = `${elapsed}ms`;
-        this.statusCode.textContent = "200 OK (Simulated)";
+        this.statusCode.innerHTML = `<span class="status-code-2xx">200 OK (Simulated)</span>`;
         this.responseDBEngine.textContent = "Mock Storage";
-        this.responseStatusBadge.textContent = "200 OK";
+        this.responseStatusBadge.innerHTML = `<span class="status-code-2xx">200 OK</span>`;
         this.playgroundSQLText.innerHTML = this.highlightSQL(`SELECT * FROM items ORDER BY items.id ASC;`);
 
         let responseData = { message: "Simulated response in Demo Mode", method, endpoint };
@@ -1113,15 +1120,18 @@ class App {
 
       const res = await fetch(fullUrl, options);
       const elapsed = Math.round(performance.now() - startTime);
+      const isSuccess = res.status >= 200 && res.status < 300;
+      const statusCls = isSuccess ? "status-code-2xx" : (res.status < 500 ? "status-code-4xx" : "status-code-5xx");
+
       this.responseTime.textContent = `${elapsed}ms`;
-      this.statusCode.textContent = `${res.status} ${res.statusText}`;
+      this.statusCode.innerHTML = `<span class="${statusCls}">${res.status} ${res.statusText || 'OK'}</span>`;
 
       const sqlHeader = res.headers.get("X-SQL-Executed") || `SELECT * FROM items ORDER BY items.id ASC;`;
       const dbHeader = res.headers.get("X-DB-Engine") || this.activeDBEngine;
 
       this.responseDBEngine.textContent = dbHeader;
       this.playgroundSQLText.innerHTML = this.highlightSQL(sqlHeader);
-      this.responseStatusBadge.textContent = `${res.status} OK`;
+      this.responseStatusBadge.innerHTML = `<span class="${statusCls}">${res.status} ${isSuccess ? 'OK' : 'Error'}</span>`;
 
       const contentType = res.headers.get("content-type");
       if (contentType && contentType.includes("application/json")) {
@@ -1129,13 +1139,13 @@ class App {
         this.responseBody.innerHTML = this.highlightJSON(json);
       } else {
         const text = await res.text();
-        this.responseBody.textContent = text || "(Empty Response)";
+        this.responseBody.innerHTML = `<span class="tok-string">${this.escapeHtml(text || "(Empty Response)")}</span>`;
       }
     } catch (err) {
       const elapsed = Math.round(performance.now() - startTime);
       this.responseTime.textContent = `${elapsed}ms`;
-      this.statusCode.textContent = "Network Error";
-      this.responseStatusBadge.textContent = "Failed";
+      this.statusCode.innerHTML = `<span class="status-code-5xx">Network Error</span>`;
+      this.responseStatusBadge.innerHTML = `<span class="status-code-5xx">Failed</span>`;
       this.responseBody.innerHTML = this.highlightJSON({ error: `Failed to fetch from ${fullUrl}`, message: err.message });
     }
   }
