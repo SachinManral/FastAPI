@@ -963,7 +963,12 @@ class App {
   }
 
   openSettingsModal() {
-    this.updateStatusBadge();
+    if (this.config.mode === "api") {
+      this.modeApiRadio.checked = true;
+    } else {
+      this.modeMockRadio.checked = true;
+    }
+    this.apiBaseUrlInput.value = this.config.baseUrl || "https://fastapi-lrtn.onrender.com";
     this.settingsModal.classList.remove("hidden");
   }
 
