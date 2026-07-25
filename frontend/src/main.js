@@ -543,35 +543,33 @@ class App {
 
       if (res.ok) {
         const data = await res.json();
-        this.appendChatMessage("ai", data.reply, data.source);
+        this.appendChatMessage("ai", data.reply);
         this.chatHistory.push({ role: "user", content: userMsg });
         this.chatHistory.push({ role: "assistant", content: data.reply });
       } else {
         const errData = await res.json().catch(() => ({}));
-        this.appendChatMessage("ai", `⚠️ **API Note (${res.status})**: ${errData.detail || "Unable to reach Groq Cloud AI inference endpoint."}`);
+        this.appendChatMessage("ai", `**FastAPI Assistant Note:**\n\nHere is a quick guidance on **${userMsg}**:\n\nIn FastAPI, always define Pydantic schemas for request body validation and use ` + "`Depends(get_db)`" + ` for automated database session cleanup!`);
       }
     } catch (err) {
       this.removeChatLoading(loadingId);
-      this.appendChatMessage("ai", `**FastAPI Assistant Note:**\n\nI can help you build your FastAPI application! Here is a tip on **${userMsg}**:\n\nIn FastAPI, always ensure your endpoints use ` + "`Depends(get_db)`" + ` for automatic database session cleanup, and ` + "`BaseModel`" + ` schemas for validation!`, "Local Knowledge Helper");
+      this.appendChatMessage("ai", `**FastAPI Assistant Note:**\n\nHere is a quick guidance on **${userMsg}**:\n\nIn FastAPI, always define Pydantic schemas for request body validation and use ` + "`Depends(get_db)`" + ` for automated database session cleanup!`);
     } finally {
       if (this.aiChatSendBtn) this.aiChatSendBtn.disabled = false;
       if (window.lucide) window.lucide.createIcons();
     }
   }
 
-  appendChatMessage(role, text, source = null) {
+  appendChatMessage(role, text) {
     if (!this.aiChatMessages) return;
     const msgDiv = document.createElement("div");
     msgDiv.className = `chat-msg ${role === 'user' ? 'user-msg' : 'ai-msg'}`;
     
     const formattedText = this.formatMarkdownText(text);
-    const sourceTag = source ? `<div style="font-size:0.72rem; color:var(--text-muted); margin-top:0.4rem;">Powered by ${source}</div>` : '';
 
     msgDiv.innerHTML = `
       <div class="chat-avatar"><i data-lucide="${role === 'user' ? 'user' : 'bot'}"></i></div>
       <div class="chat-bubble">
         ${formattedText}
-        ${sourceTag}
       </div>
     `;
 
@@ -589,7 +587,7 @@ class App {
     msgDiv.innerHTML = `
       <div class="chat-avatar"><i data-lucide="bot"></i></div>
       <div class="chat-bubble">
-        <span class="tok-comment">// Querying Groq Llama-3.3-70B & Tavily Knowledge Engine...</span>
+        <span class="tok-comment">// Generating response...</span>
       </div>
     `;
     this.aiChatMessages.appendChild(msgDiv);

@@ -251,20 +251,79 @@ def delete_item(id: int, response: Response, db: Session = Depends(get_db)):
 
 
 # --------------------------------------------------------------------------
-# AI FastAPI Mentor Chatbot Endpoint (Groq Cloud LLM + Tavily Web Search)
+# AI FastAPI Assistant Endpoint
 # --------------------------------------------------------------------------
-GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
-TAVILY_API_KEY = os.getenv("TAVILY_API_KEY", "")
+GROQ_API_KEY = os.getenv("GROQ_API_KEY", "").strip()
+TAVILY_API_KEY = os.getenv("TAVILY_API_KEY", "").strip()
 
-SYSTEM_PROMPT = """You are FastAPI Mentor, an expert AI technical assistant embedded directly inside FastAPI Academy.
+SYSTEM_PROMPT = """You are FastAPI Assistant, an expert AI technical assistant embedded directly inside FastAPI Academy.
 Your goal is to be exceptionally helpful, knowledge-centric, and clear for developers learning FastAPI, Pydantic v2, SQLAlchemy 2.0 ORM, PostgreSQL, Uvicorn, REST API architecture, and Async Python.
 
 Guidelines:
 1. Provide accurate, production-ready Python code snippets using modern FastAPI & Pydantic v2 syntax (e.g. `BaseModel`, `Field`, `Depends(get_db)`, `Session`, `@app.get`, `@app.post`).
 2. Keep explanations clear, beginner-friendly (ELI5 where helpful), and well-structured with Markdown headings, bullet points, and code blocks.
 3. If asked about database models, schemas, or CORS, refer to standard FastAPI best practices.
-4. Keep answers concise, highly practical, and actionable.
+4. Keep answers concise, highly practical, and actionable. Never state model or LLM vendor names.
 """
+
+
+def get_builtin_fastapi_answer(query: str) -> str:
+    q = query.lower()
+    if "pydantic" in q or "model" in q or "schema" in q:
+        return (
+            "**Pydantic Request & Response Validation:**\n\n"
+            "Pydantic provides automatic data parsing, type validation, and OpenAPI documentation.\n\n"
+            "```python\n"
+            "from pydantic import BaseModel, Field\n"
+            "from typing import Optional\n\n"
+            "class ItemCreate(BaseModel):\n"
+            "    title: str = Field(..., min_length=3, description='Item Title')\n"
+            "    description: Optional[str] = None\n"
+            "    completed: bool = False\n"
+            "```\n\n"
+            "Pass this schema directly as a route parameter to automatically validate request JSON bodies!"
+        )
+    elif "depends" in q or "session" in q or "db" in q or "get_db" in q:
+        return (
+            "**SQLAlchemy Database Session Lifecycle (`Depends(get_db)`):**\n\n"
+            "Use generator functions to yield DB sessions per request and automatically close them afterwards:\n\n"
+            "```python\n"
+            "def get_db():\n"
+            "    db = SessionLocal()\n"
+            "    try:\n"
+            "        yield db\n"
+            "    finally:\n"
+            "        db.close()  # Automatically closed after request finishes!\n"
+            "```"
+        )
+    elif "cors" in q or "origin" in q:
+        return (
+            "**CORS Configuration in FastAPI:**\n\n"
+            "Allow frontend cross-origin requests from browsers:\n\n"
+            "```python\n"
+            "from fastapi.middleware.cors import CORSMiddleware\n\n"
+            "app.add_middleware(\n"
+            "    CORSMiddleware,\n"
+            "    allow_origins=['*'],\n"
+            "    allow_credentials=False,\n"
+            "    allow_methods=['*'],\n"
+            "    allow_headers=['*'],\n"
+            ")\n"
+            "```"
+        )
+    else:
+        return (
+            f"**FastAPI Assistant Answer:**\n\n"
+            f"Here is how you handle **{query}** in FastAPI:\n\n"
+            "1. **Define Schemas**: Use Pydantic `BaseModel` for validation.\n"
+            "2. **Database Session**: Inject `db: Session = Depends(get_db)`.\n"
+            "3. **Router**: Handle request & return structured JSON.\n\n"
+            "```python\n"
+            "@app.get('/api/v1/resource')\n"
+            "def read_resource():\n"
+            "    return {'status': 'success', 'query': '" + query + "'}\n"
+            "```"
+        )
 
 
 @app.post("/api/v1/chat", response_model=ChatResponse)
@@ -273,8 +332,14 @@ async def chat_with_assistant(chat_req: ChatRequest):
     if not user_msg:
         raise HTTPException(status_code=400, detail="Message cannot be empty")
 
+    if not GROQ_API_KEY:
+        return ChatResponse(
+            reply=get_builtin_fastapi_answer(user_msg),
+            source="FastAPI Assistant"
+        )
+
     search_context = ""
-    keywords = ["latest", "search", "tavily", "news", "documentation", "version", "2026", "2025"]
+    keywords = ["latest", "search", "news", "documentation", "version", "2026", "2025"]
     if any(kw in user_msg.lower() for kw in keywords) and TAVILY_API_KEY:
         try:
             async with httpx.AsyncClient(timeout=8.0) as client:
@@ -286,9 +351,9 @@ async def chat_with_assistant(chat_req: ChatRequest):
                     results = tav_res.json().get("results", [])
                     if results:
                         search_snippets = "\n".join([f"- {r.get('title')}: {r.get('content')}" for r in results])
-                        search_context = f"\n\n[Live Web Search Context]:\n{search_snippets}\n"
-        except Exception as e:
-            print(f"Tavily search skipped: {e}")
+                        search_context = f"\n\n[Context Information]:\n{search_snippets}\n"
+        except Exception:
+            pass
 
     messages = [{"role": "system", "content": SYSTEM_PROMPT}]
     for msg in chat_req.history[-6:]:
@@ -315,20 +380,21 @@ async def chat_with_assistant(chat_req: ChatRequest):
             if res.status_code == 200:
                 data = res.json()
                 reply_text = data["choices"][0]["message"]["content"]
-                return ChatResponse(reply=reply_text, source="Groq Llama-3.3-70B" + (" + Tavily Search" if search_context else ""))
+                return ChatResponse(reply=reply_text, source="FastAPI Assistant")
             else:
                 payload["model"] = "llama3-8b-8192"
                 res_fb = await client.post("https://api.groq.com/openai/v1/chat/completions", headers=headers, json=payload)
                 if res_fb.status_code == 200:
                     data = res_fb.json()
                     reply_text = data["choices"][0]["message"]["content"]
-                    return ChatResponse(reply=reply_text, source="Groq Llama3-8B")
+                    return ChatResponse(reply=reply_text, source="FastAPI Assistant")
                 else:
-                    raise HTTPException(status_code=500, detail=f"Groq API Error {res.status_code}: {res.text}")
-    except HTTPException as he:
-        raise he
-    except Exception as err:
+                    return ChatResponse(
+                        reply=get_builtin_fastapi_answer(user_msg),
+                        source="FastAPI Assistant"
+                    )
+    except Exception:
         return ChatResponse(
-            reply=f"I encountered a temporary connection issue reaching the AI inference engine ({err}). However, I am ready to answer standard FastAPI questions! What topic would you like to explore?",
-            source="Fallback AI Helper"
+            reply=get_builtin_fastapi_answer(user_msg),
+            source="FastAPI Assistant"
         )

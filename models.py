@@ -52,14 +52,13 @@ class ChatRequest(BaseModel):
 
 class ChatResponse(BaseModel):
     reply: str
-    source: str = "Groq Llama-3.3-70B"
+    source: str = "FastAPI Assistant"
 
 
 class TelemetryResponse(BaseModel):
+    status: str
     engine: str
-    database_name: str
-    latency_ms: float
-
+    total_items: int
     completed_items: int
     pending_items: int
     categories: list[str]
