@@ -687,34 +687,17 @@ app.<span class="tok-func">add_middleware</span>(
         </div>
       </section>
 
-      <!-- TAB 6: AI FastAPI Assistant -->
+      <!-- TAB 6: AI FastAPI Assistant (Neo AI) -->
       <section class="tab-pane" id="tab-ai">
-        <div class="learn-banner">
-          <div class="learn-banner-icon"><i data-lucide="bot"></i></div>
+        <div class="content-header" style="margin-bottom: 0.85rem;">
           <div>
-            <h4>🤖 AI FastAPI Assistant & Technical Guide</h4>
-            <p>Ask any technical question about FastAPI endpoints, Pydantic v2 validation, SQLAlchemy ORM, PostgreSQL, or Uvicorn deployment!</p>
-          </div>
-        </div>
-
-        <div class="content-header">
-          <div>
-            <h2 class="page-title">AI Knowledge Assistant</h2>
-            <p class="page-subtitle">Real-time intelligent coding partner trained on FastAPI architecture & web development.</p>
+            <h2 class="page-title">FastAPI Assistant <span style="font-size:0.82rem; color:var(--text-muted); font-weight:normal;">(Neo AI)</span></h2>
+            <p class="page-subtitle">Interactive AI partner for FastAPI endpoints, Pydantic v2, and SQLAlchemy ORM.</p>
           </div>
           <div class="ai-engine-badge">
             <span class="status-indicator online"></span>
-            <span>Status: <strong>Active AI Assistant</strong></span>
+            <span>Neo AI Active</span>
           </div>
-        </div>
-
-        <!-- Quick AI Prompt Chips -->
-        <div class="ai-prompt-chips">
-          <span class="chip-label">Quick Prompts:</span>
-          <button class="ai-chip" data-prompt="How do Pydantic request models work in FastAPI?">Pydantic Models</button>
-          <button class="ai-chip" data-prompt="Explain Depends(get_db) session lifecycle in SQLAlchemy">Depends(get_db) Lifecycle</button>
-          <button class="ai-chip" data-prompt="How to set up CORSMiddleware for frontend communication?">CORS Setup</button>
-          <button class="ai-chip" data-prompt="Write a production POST endpoint with Pydantic validation and error handling">POST Endpoint Example</button>
         </div>
 
         <!-- AI Chat Interface Card -->
@@ -723,15 +706,22 @@ app.<span class="tok-func">add_middleware</span>(
             <div class="chat-msg ai-msg">
               <div class="chat-avatar"><i data-lucide="bot"></i></div>
               <div class="chat-bubble">
-                Hello! 👋 I am your <strong>FastAPI Assistant</strong>.
-                <br><br>
-                Ask me any questions about FastAPI endpoints, Pydantic schemas, SQLAlchemy ORM queries, database migrations, or CORS issues. How can I help you today?
+                Hello! 👋 I am <strong>FastAPI Assistant (Neo AI)</strong>. How can I help you build or debug your FastAPI application today?
               </div>
             </div>
           </div>
 
+          <!-- Quick AI Prompt Chips (Located above input bar, removed on prompt) -->
+          <div class="ai-prompt-chips" id="aiPromptChips">
+            <span class="chip-label">Quick Prompts:</span>
+            <button class="ai-chip" data-prompt="How do Pydantic request models work in FastAPI?">Pydantic Models</button>
+            <button class="ai-chip" data-prompt="Explain Depends(get_db) session lifecycle in SQLAlchemy">Depends(get_db) Lifecycle</button>
+            <button class="ai-chip" data-prompt="How to set up CORSMiddleware for frontend communication?">CORS Setup</button>
+            <button class="ai-chip" data-prompt="Write a production POST endpoint with Pydantic validation and error handling">POST Endpoint Example</button>
+          </div>
+
           <form class="ai-chat-input-bar" id="aiChatForm">
-            <input type="text" id="aiChatInput" class="input" placeholder="Ask FastAPI AI Assistant anything..." required />
+            <input type="text" id="aiChatInput" class="input" placeholder="Ask FastAPI Assistant (Neo AI)..." autocomplete="off" required />
             <button type="submit" class="btn btn-primary" id="aiChatSendBtn">
               <i data-lucide="send"></i> Send
             </button>

@@ -288,6 +288,7 @@ class App {
     this.aiChatInput = document.getElementById("aiChatInput");
     this.aiChatSendBtn = document.getElementById("aiChatSendBtn");
     this.aiFloatingBtn = document.getElementById("aiFloatingBtn");
+    this.aiPromptChips = document.getElementById("aiPromptChips");
     this.chatHistory = [];
   }
 
@@ -523,6 +524,12 @@ class App {
     const userMsg = this.aiChatInput.value.trim();
     if (!userMsg) return;
 
+    // Remove Quick Prompts container after first prompt
+    if (this.aiPromptChips) {
+      this.aiPromptChips.remove();
+      this.aiPromptChips = null;
+    }
+
     this.appendChatMessage("user", userMsg);
     this.aiChatInput.value = "";
     if (this.aiChatSendBtn) this.aiChatSendBtn.disabled = true;
@@ -548,11 +555,11 @@ class App {
         this.chatHistory.push({ role: "assistant", content: data.reply });
       } else {
         const errData = await res.json().catch(() => ({}));
-        this.appendChatMessage("ai", `**FastAPI Assistant Note:**\n\nHere is a quick guidance on **${userMsg}**:\n\nIn FastAPI, always define Pydantic schemas for request body validation and use ` + "`Depends(get_db)`" + ` for automated database session cleanup!`);
+        this.appendChatMessage("ai", `### FastAPI Assistant\n\nHere is guidance on **${userMsg}**:\n\n* **Request Validation**: Use Pydantic \`BaseModel\` schemas.\n* **Database Session**: Inject \`db: Session = Depends(get_db)\`.\n* **CORS Middleware**: Configure \`CORSMiddleware\` for browser access.`);
       }
     } catch (err) {
       this.removeChatLoading(loadingId);
-      this.appendChatMessage("ai", `**FastAPI Assistant Note:**\n\nHere is a quick guidance on **${userMsg}**:\n\nIn FastAPI, always define Pydantic schemas for request body validation and use ` + "`Depends(get_db)`" + ` for automated database session cleanup!`);
+      this.appendChatMessage("ai", `### FastAPI Assistant\n\nHere is guidance on **${userMsg}**:\n\n* **Request Validation**: Use Pydantic \`BaseModel\` schemas.\n* **Database Session**: Inject \`db: Session = Depends(get_db)\`.\n* **CORS Middleware**: Configure \`CORSMiddleware\` for browser access.`);
     } finally {
       if (this.aiChatSendBtn) this.aiChatSendBtn.disabled = false;
       if (window.lucide) window.lucide.createIcons();
@@ -607,8 +614,14 @@ class App {
       .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
       .replace(/```([\s\S]*?)```/g, (match, p1) => `<pre><code>${p1.trim()}</code></pre>`)
       .replace(/`([^`]+)`/g, "<code>$1</code>")
+      .replace(/^### (.*$)/gim, "<h3>$1</h3>")
+      .replace(/^## (.*$)/gim, "<h2>$1</h2>")
+      .replace(/^# (.*$)/gim, "<h2>$1</h2>")
       .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
-      .replace(/\n\n/g, "<br><br>")
+      .replace(/^\s*[\*\-]\s+(.*$)/gim, "<li>$1</li>")
+      .replace(/(<li>.*<\/li>)/g, "<ul>$1</ul>")
+      .replace(/<\/ul>\s*<ul>/g, "")
+      .replace(/\n\n/g, "<br>")
       .replace(/\n/g, "<br>");
     return html;
   }
