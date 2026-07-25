@@ -919,6 +919,8 @@ class App {
     if (btn) {
       btn.classList.add("is-refreshing");
       btn.disabled = true;
+      btn.innerHTML = `<i data-lucide="rotate-cw"></i> Refreshing...`;
+      if (window.lucide) window.lucide.createIcons();
     }
 
     try {
@@ -939,6 +941,8 @@ class App {
         if (btn) {
           btn.classList.remove("is-refreshing");
           btn.disabled = false;
+          btn.innerHTML = `<i data-lucide="rotate-cw"></i> Refresh Schema`;
+          if (window.lucide) window.lucide.createIcons();
         }
       }, 600);
     }
