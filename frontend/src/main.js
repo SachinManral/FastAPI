@@ -995,7 +995,11 @@ class App {
 
     try {
       const startTime = performance.now();
-      const res = await fetch(`${url}/health`, { method: "GET" });
+      const res = await fetch(`${url}/health`, { 
+        method: "GET", 
+        mode: "cors",
+        headers: { "Accept": "application/json" } 
+      });
       const elapsed = Math.round(performance.now() - startTime);
 
       if (res.ok) {
