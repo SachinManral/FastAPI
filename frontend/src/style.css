@@ -131,8 +131,10 @@ body {
 .status-code-4xx { color: #fb7185; font-weight: 700; }
 .status-code-5xx { color: #f43f5e; font-weight: 700; }
 
-.spin-anim {
-  animation: spinRotate 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+.spin-anim,
+.btn.is-refreshing i,
+.btn.is-refreshing svg {
+  animation: spinRotate 0.8s linear infinite !important;
 }
 
 @keyframes spinRotate {
@@ -705,23 +707,52 @@ body {
 .dock-pane { display: none; }
 .dock-pane.active { display: block; }
 
-/* Buttons */
-.btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.45rem; padding: 0.5rem 1rem; border-radius: 8px; font-size: 0.84rem; font-weight: 600; cursor: pointer; border: 1px solid transparent; transition: all 0.2s ease; }
-.btn i { width: 15px; height: 15px; }
+/* Buttons & Interactive Animation States */
+.btn { 
+  display: inline-flex; 
+  align-items: center; 
+  justify-content: center; 
+  gap: 0.45rem; 
+  padding: 0.5rem 1rem; 
+  border-radius: 8px; 
+  font-size: 0.84rem; 
+  font-weight: 600; 
+  cursor: pointer; 
+  border: 1px solid transparent; 
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); 
+  user-select: none;
+  position: relative;
+}
+.btn i, .btn svg { width: 15px; height: 15px; display: inline-block; flex-shrink: 0; }
+
+.btn:active {
+  transform: scale(0.94);
+}
+
+.btn.is-refreshing {
+  opacity: 0.85;
+  cursor: wait;
+  pointer-events: none;
+  border-color: var(--border-focus);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.12);
+}
 
 .btn-primary { background: var(--accent); color: var(--accent-inverse); }
 .btn-primary:hover { background: var(--accent-hover); }
 
 .btn-secondary { background: var(--bg-surface); border-color: var(--border-color); color: var(--text-bright); }
-.btn-secondary:hover { background: var(--bg-card-hover); border-color: var(--border-focus); }
+.btn-secondary:hover { background: var(--bg-card-hover); border-color: var(--border-focus); transform: translateY(-1px); }
+.btn-secondary:active { transform: scale(0.94); }
 .btn-sm { padding: 0.35rem 0.75rem; font-size: 0.78rem; }
 
-.btn-icon { background: var(--bg-surface); border: 1px solid var(--border-color); color: var(--text-muted); width: 32px; height: 32px; border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-.btn-icon:hover { color: var(--text-bright); border-color: var(--border-focus); }
-.btn-icon i { width: 14px; height: 14px; }
+.btn-icon { background: var(--bg-surface); border: 1px solid var(--border-color); color: var(--text-muted); width: 32px; height: 32px; border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; }
+.btn-icon:hover { color: var(--text-bright); border-color: var(--border-focus); transform: translateY(-1px); }
+.btn-icon:active { transform: scale(0.92); }
+.btn-icon i, .btn-icon svg { width: 14px; height: 14px; }
 
-.btn-chip { background: var(--bg-surface); border: 1px solid var(--border-color); color: var(--text-main); padding: 0.25rem 0.6rem; border-radius: 6px; font-size: 0.74rem; font-family: 'JetBrains Mono', monospace; cursor: pointer; }
+.btn-chip { background: var(--bg-surface); border: 1px solid var(--border-color); color: var(--text-main); padding: 0.25rem 0.6rem; border-radius: 6px; font-size: 0.74rem; font-family: 'JetBrains Mono', monospace; cursor: pointer; transition: all 0.2s ease; }
 .btn-chip:hover { border-color: var(--border-focus); color: var(--text-bright); }
+.btn-chip:active { transform: scale(0.94); }
 
 /* Banners & Cards */
 .learn-banner { background: var(--banner-bg); border: 1px solid var(--banner-border); border-radius: 10px; padding: 1rem 1.25rem; margin-bottom: 1.25rem; display: flex; align-items: flex-start; gap: 0.85rem; }
