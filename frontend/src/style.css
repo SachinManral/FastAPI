@@ -925,6 +925,13 @@ body {
   .learn-tab { flex-shrink: 0; white-space: nowrap; }
 }
 
+@media (max-width: 768px) {
+  .ai-floating-trigger { display: none !important; }
+  .ai-chat-card { height: calc(100dvh - 180px); min-height: 320px; max-height: calc(100dvh - 130px); }
+  .ai-prompt-chips { overflow-x: auto; flex-wrap: nowrap; padding: 0.45rem 0.75rem; -webkit-overflow-scrolling: touch; }
+  .ai-chip { flex-shrink: 0; white-space: nowrap; }
+}
+
 @media (max-width: 480px) {
   .brand-name { font-size: 0.92rem; }
   .version-tag { display: none; }
@@ -933,11 +940,13 @@ body {
   .hero-metrics { grid-template-columns: 1fr; }
   .table-actions { flex-direction: column; gap: 0.25rem; }
   .btn-sm { padding: 0.35rem 0.6rem; font-size: 0.74rem; }
-  .ai-floating-trigger { bottom: 1.25rem; right: 1rem; padding: 0.5rem 0.85rem; font-size: 0.78rem; }
-  .ai-chat-card { height: calc(100vh - 190px); min-height: 380px; border-radius: 10px; }
-  .ai-chat-input-bar { padding: 0.65rem 0.75rem; gap: 0.5rem; }
-  .ai-chat-input-bar input { padding: 0.6rem 0.85rem; font-size: 0.85rem; }
-  .ai-chat-input-bar .btn-primary { padding: 0.6rem 0.95rem; font-size: 0.82rem; }
+  .ai-floating-trigger { display: none !important; }
+  .ai-chat-card { height: calc(100dvh - 160px); min-height: 280px; max-height: calc(100dvh - 110px); border-radius: 10px; margin-bottom: 0; }
+  .ai-prompt-chips { overflow-x: auto; flex-wrap: nowrap; padding: 0.4rem 0.6rem; gap: 0.35rem; -webkit-overflow-scrolling: touch; }
+  .ai-chip { flex-shrink: 0; white-space: nowrap; font-size: 0.72rem; padding: 0.25rem 0.65rem; }
+  .ai-chat-input-bar { padding: 0.5rem 0.6rem; gap: 0.4rem; border-top: 1.5px solid var(--border-color); background: var(--bg-card); position: sticky; bottom: 0; z-index: 10; }
+  .ai-chat-input-bar input { padding: 0.5rem 0.75rem; font-size: 0.84rem; height: 38px; min-width: 0; box-sizing: border-box; }
+  .ai-chat-input-bar .btn-primary { padding: 0.5rem 0.85rem; font-size: 0.82rem; height: 38px; flex-shrink: 0; white-space: nowrap; box-sizing: border-box; }
 }
 
 /* --------------------------------------------------------------------------
