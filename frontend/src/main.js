@@ -916,20 +916,10 @@ class App {
     if (!this.schemaTablesGrid) return;
     
     const btn = this.refreshSchemaBtn;
-    const icon = btn ? btn.querySelector("svg, i") : null;
-
     if (btn) {
       btn.classList.add("is-refreshing");
       btn.disabled = true;
     }
-
-    if (icon) {
-      icon.classList.remove("spin-anim");
-      void icon.offsetWidth; // Force reflow to restart CSS animation cleanly
-      icon.classList.add("spin-anim");
-    }
-
-    const startTime = Date.now();
 
     try {
       if (this.config.mode === "api") {
@@ -945,17 +935,12 @@ class App {
       this.renderMockDBSchema();
       this.showToast("Schema refreshed (Mock Storage)", "info");
     } finally {
-      const elapsed = Date.now() - startTime;
-      const minDuration = 600;
-      const delay = Math.max(0, minDuration - elapsed);
-
       setTimeout(() => {
-        if (icon) icon.classList.remove("spin-anim");
         if (btn) {
           btn.classList.remove("is-refreshing");
           btn.disabled = false;
         }
-      }, delay);
+      }, 600);
     }
   }
 
