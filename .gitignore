@@ -89,6 +89,9 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
+# AI Agent Skills & Customization Roots
+.agents/
+
 # IDE & Editor files
 .vscode/*
 !.vscode/extensions.json
