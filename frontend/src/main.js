@@ -163,10 +163,11 @@ const FLOW_EXPLANATIONS = {
 
 class App {
   constructor() {
+    const envApiUrl = import.meta.env.VITE_API_BASE_URL || "https://fastapi-lrtn.onrender.com";
     const savedConfig = localStorage.getItem("fastapi_hub_config");
     this.config = savedConfig ? JSON.parse(savedConfig) : {
       mode: "api",
-      baseUrl: "https://fastapi-lrtn.onrender.com"
+      baseUrl: envApiUrl
     };
 
     const savedItems = localStorage.getItem("fastapi_hub_items");
