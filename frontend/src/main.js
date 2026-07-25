@@ -555,11 +555,11 @@ class App {
         this.chatHistory.push({ role: "assistant", content: data.reply });
       } else {
         const errData = await res.json().catch(() => ({}));
-        this.appendChatMessage("ai", `### FastAPI Assistant\n\nHere is guidance on **${userMsg}**:\n\n* **Request Validation**: Use Pydantic \`BaseModel\` schemas.\n* **Database Session**: Inject \`db: Session = Depends(get_db)\`.\n* **CORS Middleware**: Configure \`CORSMiddleware\` for browser access.`);
+        this.appendChatMessage("ai", `### Neo AI\n\nHere is guidance on **${userMsg}**:\n\n* **Request Validation**: Use Pydantic \`BaseModel\` schemas.\n* **Database Session**: Inject \`db: Session = Depends(get_db)\`.\n* **CORS Middleware**: Configure \`CORSMiddleware\` for browser access.`);
       }
     } catch (err) {
       this.removeChatLoading(loadingId);
-      this.appendChatMessage("ai", `### FastAPI Assistant\n\nHere is guidance on **${userMsg}**:\n\n* **Request Validation**: Use Pydantic \`BaseModel\` schemas.\n* **Database Session**: Inject \`db: Session = Depends(get_db)\`.\n* **CORS Middleware**: Configure \`CORSMiddleware\` for browser access.`);
+      this.appendChatMessage("ai", `### Neo AI\n\nHere is guidance on **${userMsg}**:\n\n* **Request Validation**: Use Pydantic \`BaseModel\` schemas.\n* **Database Session**: Inject \`db: Session = Depends(get_db)\`.\n* **CORS Middleware**: Configure \`CORSMiddleware\` for browser access.`);
     } finally {
       if (this.aiChatSendBtn) this.aiChatSendBtn.disabled = false;
       if (window.lucide) window.lucide.createIcons();

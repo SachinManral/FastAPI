@@ -988,12 +988,14 @@ body {
 .ai-chat-card {
   background: var(--bg-card);
   border: 1px solid var(--border-color);
-  border-radius: 12px;
+  border-radius: 14px;
   display: flex;
   flex-direction: column;
   height: calc(100vh - 220px);
   min-height: 480px;
   max-height: 680px;
+  max-width: 860px;
+  margin: 0 auto;
   overflow: hidden;
   box-shadow: var(--shadow-md);
 }

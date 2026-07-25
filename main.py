@@ -256,7 +256,7 @@ def delete_item(id: int, response: Response, db: Session = Depends(get_db)):
 GROQ_API_KEY = os.getenv("GROQ_API_KEY", "").strip()
 TAVILY_API_KEY = os.getenv("TAVILY_API_KEY", "").strip()
 
-SYSTEM_PROMPT = """You are FastAPI Assistant, an expert AI technical assistant embedded directly inside FastAPI Academy.
+SYSTEM_PROMPT = """You are Neo AI, an expert AI technical assistant embedded directly inside FastAPI Academy.
 Your goal is to be exceptionally helpful, knowledge-centric, and clear for developers learning FastAPI, Pydantic v2, SQLAlchemy 2.0 ORM, PostgreSQL, Uvicorn, REST API architecture, and Async Python.
 
 Guidelines:
@@ -313,7 +313,7 @@ def get_builtin_fastapi_answer(query: str) -> str:
         )
     else:
         return (
-            f"**FastAPI Assistant Answer:**\n\n"
+            f"### Neo AI\n\n"
             f"Here is how you handle **{query}** in FastAPI:\n\n"
             "1. **Define Schemas**: Use Pydantic `BaseModel` for validation.\n"
             "2. **Database Session**: Inject `db: Session = Depends(get_db)`.\n"
@@ -335,7 +335,7 @@ async def chat_with_assistant(chat_req: ChatRequest):
     if not GROQ_API_KEY:
         return ChatResponse(
             reply=get_builtin_fastapi_answer(user_msg),
-            source="FastAPI Assistant"
+            source="Neo AI"
         )
 
     search_context = ""
@@ -380,21 +380,21 @@ async def chat_with_assistant(chat_req: ChatRequest):
             if res.status_code == 200:
                 data = res.json()
                 reply_text = data["choices"][0]["message"]["content"]
-                return ChatResponse(reply=reply_text, source="FastAPI Assistant")
+                return ChatResponse(reply=reply_text, source="Neo AI")
             else:
                 payload["model"] = "llama3-8b-8192"
                 res_fb = await client.post("https://api.groq.com/openai/v1/chat/completions", headers=headers, json=payload)
                 if res_fb.status_code == 200:
                     data = res_fb.json()
                     reply_text = data["choices"][0]["message"]["content"]
-                    return ChatResponse(reply=reply_text, source="FastAPI Assistant")
+                    return ChatResponse(reply=reply_text, source="Neo AI")
                 else:
                     return ChatResponse(
                         reply=get_builtin_fastapi_answer(user_msg),
-                        source="FastAPI Assistant"
+                        source="Neo AI"
                     )
     except Exception:
         return ChatResponse(
             reply=get_builtin_fastapi_answer(user_msg),
-            source="FastAPI Assistant"
+            source="Neo AI"
         )
