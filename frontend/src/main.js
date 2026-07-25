@@ -307,10 +307,56 @@ class App {
     this.showToast(`Switched to ${newTheme.toUpperCase()} theme`, "info");
   }
 
+  toggleThemeWithAnimation(e) {
+    const btn = this.themeToggleBtn;
+    const rect = btn ? btn.getBoundingClientRect() : { left: window.innerWidth / 2, top: 40, width: 32, height: 32 };
+    const x = e && e.clientX ? e.clientX : rect.left + rect.width / 2;
+    const y = e && e.clientY ? e.clientY : rect.top + rect.height / 2;
+
+    const endRadius = Math.hypot(
+      Math.max(x, window.innerWidth - x),
+      Math.max(y, window.innerHeight - y)
+    );
+
+    if (document.startViewTransition) {
+      const transition = document.startViewTransition(() => {
+        this.toggleTheme();
+      });
+
+      transition.ready.then(() => {
+        document.documentElement.animate(
+          {
+            clipPath: [
+              `circle(0px at ${x}px ${y}px)`,
+              `circle(${endRadius}px at ${x}px ${y}px)`
+            ]
+          },
+          {
+            duration: 550,
+            easing: "ease-in-out",
+            pseudoElement: "::view-transition-new(root)"
+          }
+        );
+      });
+    } else {
+      this.createRippleEffect(x, y);
+      this.toggleTheme();
+    }
+  }
+
+  createRippleEffect(x, y) {
+    const ripple = document.createElement("div");
+    ripple.className = "theme-ripple-wave";
+    ripple.style.left = `${x}px`;
+    ripple.style.top = `${y}px`;
+    document.body.appendChild(ripple);
+    setTimeout(() => ripple.remove(), 600);
+  }
+
   bindEvents() {
     // Theme Switcher Event
     if (this.themeToggleBtn) {
-      this.themeToggleBtn.addEventListener("click", () => this.toggleTheme());
+      this.themeToggleBtn.addEventListener("click", (e) => this.toggleThemeWithAnimation(e));
     }
 
     // Hero Action
