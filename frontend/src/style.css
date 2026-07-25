@@ -926,10 +926,17 @@ body {
 }
 
 @media (max-width: 768px) {
-  .ai-floating-trigger { display: none !important; }
-  .ai-chat-card { height: calc(100dvh - 180px); min-height: 320px; max-height: calc(100dvh - 130px); }
+  #tab-ai { display: none; flex-direction: column; height: calc(100dvh - 90px); overflow: hidden; }
+  #tab-ai.active { display: flex; }
+  #tab-ai .content-header { margin-bottom: 0.35rem !important; gap: 0.25rem; }
+  #tab-ai .page-title { font-size: 1.15rem; }
+  #tab-ai .page-subtitle { display: none; }
+  #tab-ai .ai-engine-badge { padding: 0.25rem 0.6rem; font-size: 0.72rem; }
+  
+  .ai-chat-card { flex: 1; height: 100%; min-height: 0; max-height: none; border-radius: 10px; margin-bottom: 0; }
   .ai-prompt-chips { overflow-x: auto; flex-wrap: nowrap; padding: 0.45rem 0.75rem; -webkit-overflow-scrolling: touch; }
   .ai-chip { flex-shrink: 0; white-space: nowrap; }
+  .ai-floating-trigger { bottom: 1.25rem; right: 1rem; padding: 0.5rem 0.85rem; font-size: 0.78rem; }
 }
 
 @media (max-width: 480px) {
@@ -940,10 +947,10 @@ body {
   .hero-metrics { grid-template-columns: 1fr; }
   .table-actions { flex-direction: column; gap: 0.25rem; }
   .btn-sm { padding: 0.35rem 0.6rem; font-size: 0.74rem; }
-  .ai-floating-trigger { display: none !important; }
-  .ai-chat-card { height: calc(100dvh - 160px); min-height: 280px; max-height: calc(100dvh - 110px); border-radius: 10px; margin-bottom: 0; }
-  .ai-prompt-chips { overflow-x: auto; flex-wrap: nowrap; padding: 0.4rem 0.6rem; gap: 0.35rem; -webkit-overflow-scrolling: touch; }
-  .ai-chip { flex-shrink: 0; white-space: nowrap; font-size: 0.72rem; padding: 0.25rem 0.65rem; }
+  
+  #tab-ai { height: calc(100dvh - 80px); }
+  .ai-prompt-chips { padding: 0.35rem 0.5rem; gap: 0.35rem; }
+  .ai-chip { font-size: 0.72rem; padding: 0.25rem 0.6rem; }
   .ai-chat-input-bar { padding: 0.5rem 0.6rem; gap: 0.4rem; border-top: 1.5px solid var(--border-color); background: var(--bg-card); position: sticky; bottom: 0; z-index: 10; }
   .ai-chat-input-bar input { padding: 0.5rem 0.75rem; font-size: 0.84rem; height: 38px; min-width: 0; box-sizing: border-box; }
   .ai-chat-input-bar .btn-primary { padding: 0.5rem 0.85rem; font-size: 0.82rem; height: 38px; flex-shrink: 0; white-space: nowrap; box-sizing: border-box; }
