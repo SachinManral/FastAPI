@@ -636,6 +636,15 @@ class App {
     if (navBtn) navBtn.classList.add("active");
     if (targetPane) targetPane.classList.add("active");
     if (targetTab === "schema") this.fetchDBSchema();
+
+    // Hide floating trigger button when inside Neo AI tab to prevent button overlap on mobile
+    if (this.aiFloatingBtn) {
+      if (targetTab === "ai") {
+        this.aiFloatingBtn.classList.add("hidden");
+      } else {
+        this.aiFloatingBtn.classList.remove("hidden");
+      }
+    }
   }
 
   openModuleDetail(modKey) {
