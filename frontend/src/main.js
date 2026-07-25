@@ -165,8 +165,8 @@ class App {
   constructor() {
     const savedConfig = localStorage.getItem("fastapi_hub_config");
     this.config = savedConfig ? JSON.parse(savedConfig) : {
-      mode: "mock",
-      baseUrl: "http://localhost:8000"
+      mode: "api",
+      baseUrl: "https://fastapi-lrtn.onrender.com"
     };
 
     const savedItems = localStorage.getItem("fastapi_hub_items");
