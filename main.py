@@ -256,15 +256,17 @@ def delete_item(id: int, response: Response, db: Session = Depends(get_db)):
 GROQ_API_KEY = os.getenv("GROQ_API_KEY", "").strip()
 TAVILY_API_KEY = os.getenv("TAVILY_API_KEY", "").strip()
 
-SYSTEM_PROMPT = """You are Neo AI, a smart, helpful, and friendly AI assistant inside FastAPI Academy.
+SYSTEM_PROMPT = """You are Neo AI, a smart, helpful, and friendly AI assistant inside FastAPI Academy. You have access to real-time web search and always provide up-to-date information.
 
 Response Guidelines:
 1. Clear & Informative Answers: Never give dry, one-liner answers. Provide crisp, easy-to-understand explanations with helpful context so everything is crystal clear.
 2. Simple & Beginner-Friendly Language: Explain concepts in plain, simple English. Break down topics into clear steps or key points.
 3. Code & Technical Questions: For programming, FastAPI, Python, or SQL questions, provide clean, production-ready code snippets with step-by-step explanations.
 4. General Knowledge Questions: Provide well-structured, clear, and informative summaries with relevant key facts.
-5. Greetings: Keep simple greetings warm, polite, and brief (1-2 sentences).
-6. Formatting: Use clean Markdown formatting (bolding, bullet points, code blocks). Never mention internal model or LLM vendor names.
+5. Real-Time Data: When web search context is provided in [Web Search Results], use it to give accurate, current answers. You CAN answer questions about current time, weather, news, people, and events.
+6. Current Time: You are always given the current date and time at the start of each message. Use it to answer time-related questions accurately.
+7. Greetings: Keep simple greetings warm, polite, and brief (1-2 sentences).
+8. Formatting: Use clean Markdown formatting (bolding, bullet points, code blocks). Never mention internal model or LLM vendor names.
 """
 
 
@@ -332,20 +334,56 @@ async def chat_with_assistant(chat_req: ChatRequest):
             source="Neo AI"
         )
 
+    # Inject current date and time so the AI always knows what time it is
+    now = datetime.now()
+    current_datetime_str = now.strftime("%A, %d %B %Y, %I:%M %p IST")
+    datetime_context = f"[Current Date & Time: {current_datetime_str}]\n\n"
+
     search_context = ""
-    keywords = ["latest", "search", "news", "documentation", "version", "2026", "2025"]
-    if any(kw in user_msg.lower() for kw in keywords) and TAVILY_API_KEY:
+
+    # Broad keyword list: triggers web search for general knowledge + tech questions
+    general_search_keywords = [
+        # time & location
+        "time", "date", "today", "now", "current", "clock",
+        # weather
+        "weather", "temperature", "forecast", "rain", "sunny",
+        # news & events
+        "news", "latest", "recent", "update", "happened", "event",
+        # people & places
+        "prime minister", "president", "who is", "who are", "where is",
+        "capital", "population", "country", "city",
+        # tech & docs
+        "version", "documentation", "release", "changelog",
+        "2024", "2025", "2026",
+        # explicit search intent
+        "search", "find", "look up", "scrab", "scrape", "fetch", "google",
+    ]
+
+    # Detect if question is technical/FastAPI related for smarter query building
+    tech_keywords = ["fastapi", "python", "sqlalchemy", "pydantic", "uvicorn", "api", "code", "endpoint", "route"]
+    is_tech_question = any(kw in user_msg.lower() for kw in tech_keywords)
+
+    should_search = any(kw in user_msg.lower() for kw in general_search_keywords)
+
+    if should_search and TAVILY_API_KEY:
+        # Build smart search query: prefix with FastAPI only for tech questions
+        if is_tech_question:
+            search_query = f"FastAPI Python {user_msg}"
+        else:
+            search_query = user_msg
         try:
-            async with httpx.AsyncClient(timeout=8.0) as client:
+            async with httpx.AsyncClient(timeout=10.0) as client:
                 tav_res = await client.post(
                     "https://api.tavily.com/search",
-                    json={"api_key": TAVILY_API_KEY, "query": f"FastAPI Python {user_msg}", "max_results": 3}
+                    json={"api_key": TAVILY_API_KEY, "query": search_query, "max_results": 4}
                 )
                 if tav_res.status_code == 200:
                     results = tav_res.json().get("results", [])
                     if results:
-                        search_snippets = "\n".join([f"- {r.get('title')}: {r.get('content')}" for r in results])
-                        search_context = f"\n\n[Context Information]:\n{search_snippets}\n"
+                        search_snippets = "\n".join(
+                            [f"- {r.get('title', '')}: {r.get('content', '')[:300]}" for r in results]
+                        )
+                        search_context = f"\n\n[Web Search Results]:\n{search_snippets}\n"
         except Exception:
             pass
 
@@ -353,7 +391,7 @@ async def chat_with_assistant(chat_req: ChatRequest):
     for msg in chat_req.history[-6:]:
         messages.append({"role": msg.role, "content": msg.content})
 
-    current_content = user_msg + (search_context if search_context else "")
+    current_content = datetime_context + user_msg + (search_context if search_context else "")
     messages.append({"role": "user", "content": current_content})
 
     headers = {
