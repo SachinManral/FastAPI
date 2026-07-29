@@ -255,6 +255,7 @@ def delete_item(id: int, response: Response, db: Session = Depends(get_db)):
 # --------------------------------------------------------------------------
 GROQ_API_KEY = os.getenv("GROQ_API_KEY", "").strip()
 TAVILY_API_KEY = os.getenv("TAVILY_API_KEY", "").strip()
+SERPAPI_KEY = os.getenv("SERPAPI_KEY", "").strip()
 
 SYSTEM_PROMPT = """You are Neo AI, a smart, helpful, and friendly AI assistant inside FastAPI Academy. You have access to real-time web search and always provide up-to-date information.
 
@@ -365,12 +366,14 @@ async def chat_with_assistant(chat_req: ChatRequest):
 
     should_search = any(kw in user_msg.lower() for kw in general_search_keywords)
 
+    # Build smart search query: prefix with FastAPI only for tech questions
+    if is_tech_question:
+        search_query = f"FastAPI Python {user_msg}"
+    else:
+        search_query = user_msg
+
     if should_search and TAVILY_API_KEY:
-        # Build smart search query: prefix with FastAPI only for tech questions
-        if is_tech_question:
-            search_query = f"FastAPI Python {user_msg}"
-        else:
-            search_query = user_msg
+        # --- Primary Search: Tavily ---
         try:
             async with httpx.AsyncClient(timeout=10.0) as client:
                 tav_res = await client.post(
@@ -383,7 +386,42 @@ async def chat_with_assistant(chat_req: ChatRequest):
                         search_snippets = "\n".join(
                             [f"- {r.get('title', '')}: {r.get('content', '')[:300]}" for r in results]
                         )
-                        search_context = f"\n\n[Web Search Results]:\n{search_snippets}\n"
+                        search_context = f"\n\n[Web Search Results — Tavily]:\n{search_snippets}\n"
+        except Exception:
+            pass  # Tavily failed, will fall through to SerpAPI
+
+    if should_search and not search_context and SERPAPI_KEY:
+        # --- Fallback Search: SerpAPI ---
+        try:
+            async with httpx.AsyncClient(timeout=10.0) as client:
+                serp_res = await client.get(
+                    "https://serpapi.com/search",
+                    params={
+                        "api_key": SERPAPI_KEY,
+                        "q": search_query,
+                        "engine": "google",
+                        "num": 4,
+                    }
+                )
+                if serp_res.status_code == 200:
+                    serp_data = serp_res.json()
+                    organic = serp_data.get("organic_results", [])
+                    answer_box = serp_data.get("answer_box", {})
+                    snippets = []
+                    # Include answer box first if available (most direct answer)
+                    if answer_box:
+                        answer_text = answer_box.get("answer") or answer_box.get("snippet", "")
+                        answer_title = answer_box.get("title", "Quick Answer")
+                        if answer_text:
+                            snippets.append(f"- {answer_title}: {answer_text}")
+                    # Then organic results
+                    for r in organic[:4]:
+                        title = r.get("title", "")
+                        snippet = r.get("snippet", "")[:300]
+                        if title and snippet:
+                            snippets.append(f"- {title}: {snippet}")
+                    if snippets:
+                        search_context = f"\n\n[Web Search Results — SerpAPI]:\n" + "\n".join(snippets) + "\n"
         except Exception:
             pass
 
